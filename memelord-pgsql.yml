@@ -1,0 +1,58 @@
+---
+apiVersion: secretgenerator.mittwald.de/v1alpha1
+kind: StringSecret
+metadata:
+  name: laas-memelord-database
+  labels:
+    cnpg.io/reload: "true"
+spec:
+  data:
+    username: laas-memelord
+  fields:
+    - fieldName: password
+      length: "32"
+      encoding: hex
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: laas-memelord-database
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17
+  storage:
+    size: 1Gi
+    storageClass: postgres
+  affinity:
+    podAntiAffinityType: required
+    nodeSelector:
+      codemowers.io/lvm-ubuntu-vg: enterprise-ssd
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "1Gi"
+    limits:
+      cpu: "1"
+      memory: "4Gi"
+  postgresql:
+    parameters:
+      max_connections: "300"
+      shared_buffers: "512MB"
+      effective_cache_size: "2GB"
+  managed:
+    roles:
+    - name: laas-memelord
+      ensure: present
+      login: true
+      passwordSecret:
+        name: laas-memelord-database
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: laas-memelord
+spec:
+  name: laas-memelord
+  owner: laas-memelord
+  cluster:
+    name: laas-memelord-database

@@ -1,0 +1,29 @@
+---
+apiVersion: secretgenerator.mittwald.de/v1alpha1
+kind: StringSecret
+metadata:
+  name: laas-memelord-redis
+spec:
+  fields:
+    - fieldName: redis-password
+      length: "32"
+      encoding: hex
+
+---
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  name: laas-memelord-redis
+spec:
+  authentication:
+    passwordFromSecret:
+      name: laas-memelord-redis
+      key: redis-password
+  replicas: 1
+  resources:
+    requests:
+      cpu: 500m
+      memory: 500Mi
+    limits:
+      cpu: 600m
+      memory: 750Mi

@@ -1,0 +1,47 @@
+---
+apiVersion: s3.onyxia.sh/v1alpha1
+kind: Policy
+metadata:
+  name: laas-memelord-policy
+spec:
+  name: laas-memelord-policy
+  s3InstanceRef: minio/default
+  policyContent: >-
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:ListBucket",
+            "s3:GetObject",
+            "s3:PutObject"
+          ],
+          "Resource": [
+            "arn:aws:s3:::laas-memelord",
+            "arn:aws:s3:::laas-memelord/*"
+          ]
+        }
+      ]
+    }
+---
+apiVersion: s3.onyxia.sh/v1alpha1
+kind: S3User
+metadata:
+  name: laas-memelord-bucket
+spec:
+  accessKey: laas-memelord-bucket # This is automatically created
+  policies:
+    - laas-memelord-policy
+  s3InstanceRef: minio/default
+---
+apiVersion: s3.onyxia.sh/v1alpha1
+kind: Bucket
+metadata:
+  name: laas-memelord
+spec:
+  name: laas-memelord
+  s3InstanceRef: minio/default
+  quota:
+    default: 100000000
+
