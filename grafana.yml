@@ -28,7 +28,15 @@ spec:
               value: sqlite3
             - name: GF_DATABASE_PATH
               value: /var/lib/grafana/grafana.db
-            - name: GF_AUTH_GENERIC_OAUTH_SIGNOUT_REDIRECT_URL
+            - name: GF_AUTH_BASIC_ENABLED
+              value: "false"
+            - name: GF_AUTH_GENERIC_OAUTH_ENABLED
+              value: "true"
+            - name: GF_AUTH_GENERIC_OAUTH_LOGIN_ATTRIBUTE_PATH
+              value: sub
+            - name: GF_AUTH_GENERIC_OAUTH_EMAIL_ATTRIBUTE_PATH
+              value: user.email
+            #- name: GF_AUTH_GENERIC_OAUTH_SIGNOUT_REDIRECT_URL
             - name: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -40,7 +48,7 @@ spec:
                   name: "oidc-client-laas-memelord-owner-secrets"
                   key: OIDC_CLIENT_SECRET
             - name: GF_AUTH_GENERIC_OAUTH_SCOPES
-              value: openid,profile
+              value: openid,profile,email
             - name: GF_AUTH_GENERIC_OAUTH_AUTH_URL
               valueFrom:
                 secretKeyRef:
@@ -52,6 +60,26 @@ spec:
                   name: "oidc-client-laas-memelord-owner-secrets"
                   key: OIDC_IDP_TOKEN_URI
             - name: GF_AUTH_GENERIC_OAUTH_API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: "oidc-client-laas-memelord-owner-secrets"
+                  key: OIDC_IDP_USERINFO_URI
+            - name: GF_SERVER_DOMAIN
+              value: laas-grafana.ee-lte-1.codemowers.io
+            - name: GF_SERVER_ROOT_URL
+              value: "https://%(domain)s/"
+            - name: GF_AUTH_OAUTH_ALLOW_INSECURE_EMAIL_LOOKUP
+              value: "true"
+            - name: GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP
+              value: "true"
+            - name: GF_AUTH_GENERIC_OAUTH_USE_PKCE
+              value: "true"
+            - name: GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH
+              value: Admin
+            - name: GF_AUTH_GENERIC_OAUTH_ALLOW_ASSIGN_GRAFANA_ADMIN
+              value: "true"
+            - name: GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION
+              value: "true"
           volumeMounts:
             - name: grafana-storage
               mountPath: /var/lib/grafana
