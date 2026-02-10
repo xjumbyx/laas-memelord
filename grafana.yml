@@ -162,7 +162,7 @@ metadata:
   name: laas-grafana
 spec:
   displayName: Laas Grafana
-  uri: https://laas-grafana.ee-lte-1.codemowers.io/oidc/authenticate/
+  uri: https://laas-grafana.ee-lte-1.codemowers.io/
   redirectUris:
     - https://laas-grafana.ee-lte-1.codemowers.io/*
   grantTypes:
