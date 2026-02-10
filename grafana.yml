@@ -164,7 +164,7 @@ spec:
   displayName: Laas Grafana
   uri: https://laas-grafana.ee-lte-1.codemowers.io/
   redirectUris:
-    - https://laas-grafana.ee-lte-1.codemowers.io/*
+    - https://laas-grafana.ee-lte-1.codemowers.io/
   grantTypes:
     - authorization_code
     - refresh_token
