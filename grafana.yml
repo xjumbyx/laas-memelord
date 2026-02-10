@@ -1,0 +1,71 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: laas-memelord
+  labels:
+    app: laas-grafana
+spec:
+  serviceName: laas-grafana
+  replicas: 1
+  selector:
+    matchLabels:
+      app: laas-grafana
+  template:
+    metadata:
+      labels:
+        app: laas-grafana
+    spec:
+      containers:
+        - name: laas-grafana
+          image: grafana/grafana:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: GF_DATABASE_TYPE
+              value: sqlite3
+            - name: GF_DATABASE_PATH
+              value: /var/lib/grafana/grafana.db
+          volumeMounts:
+            - name: grafana-storage
+              mountPath: /var/lib/grafana
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+  volumeClaimTemplates:
+    - metadata:
+        name: grafana-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: sqlite
+        resources:
+          requests:
+            storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: laas-memelord
+  labels:
+    app: laas-grafana
+spec:
+  type: ClusterIP
+  selector:
+    app: laas-grafana
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+
