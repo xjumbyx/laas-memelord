@@ -5,9 +5,9 @@ metadata:
   name: "laas-memelord"
 spec:
   displayName: "Laas Memelord"
-  uri: "https://{{ .Values.hostname }}.{{ .Values.domain }}/"
+  uri: "https://laas-memelord.ee-lte-1.codemowers.io/"
   redirectUris:
-    - "https://{{ .Values.hostname }}.{{ .Values.domain }}/oidc/callback/"
+    - "https://laas-memelord.ee-lte-1.codemowers.io/oidc/callback/"
   grantTypes:
     - authorization_code
     - refresh_token
