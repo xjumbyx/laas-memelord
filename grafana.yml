@@ -1,4 +1,27 @@
 ---
+apiVersion: codemowers.cloud/v1beta1
+kind: OIDCClient
+metadata:
+  name: laas-grafana
+spec:
+  displayName: Laas Grafana
+  uri: https://laas-grafana.ee-lte-1.codemowers.io/
+  redirectUris:
+    - https://laas-grafana.ee-lte-1.codemowers.io/login/generic_oauth
+  allowedGroups:
+    - github.com:codemowers:admins
+  grantTypes:
+    - authorization_code
+    - refresh_token
+  responseTypes:
+    - code
+  availableScopes:
+    - openid
+    - profile
+    - groups
+  pkce: true
+  
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -76,7 +99,7 @@ spec:
             - name: GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP
               value: "true"
             - name: GF_AUTH_GENERIC_OAUTH_USE_PKCE
-              value: "false"
+              value: "true"
             - name: GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH
               value: "contains(groups[*], 'github.com:codemowers:admins') && 'Admin' || Viewer"
             - name: GF_AUTH_GENERIC_OAUTH_ALLOW_ASSIGN_GRAFANA_ADMIN
@@ -158,34 +181,12 @@ spec:
                   number: 80
   tls:
     - secretName: laas-grafana-tls
----
-apiVersion: codemowers.cloud/v1beta1
-kind: OIDCClient
-metadata:
-  name: laas-grafana
-spec:
-  displayName: Laas Grafana
-  uri: https://laas-grafana.ee-lte-1.codemowers.io/
-  redirectUris:
-    - https://laas-grafana.ee-lte-1.codemowers.io/login/generic_oauth
-  allowedGroups:
-    - github.com:codemowers:admins
-  grantTypes:
-    - authorization_code
-    - refresh_token
-  responseTypes:
-    - code
-  availableScopes:
-    - openid
-    - profile
-    - groups
-  pkce: false
-  
+
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: laas-grafana
+  name: laas-grafana-config-datasources
 data:
   prometheus.yaml: |
     apiVersion: 1
