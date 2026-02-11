@@ -165,6 +165,7 @@ spec:
     - https://laas-grafana.ee-lte-1.codemowers.io/
     - https://laas-grafana.ee-lte-1.codemowers.io/login/generic_oauth/
     - https://laas-grafana.ee-lte-1.codemowers.io/login/generic_oauth
+    - https://laas-grafana.ee-lte-1.codemowers.io/*
   grantTypes:
     - authorization_code
     - refresh_token
