@@ -34,7 +34,11 @@ spec:
               value: "true"
             - name: GF_AUTH_GENERIC_OAUTH_NAME
               value: "OAuth"
-            #- name: GF_AUTH_GENERIC_OAUTH_SIGNOUT_REDIRECT_URL
+            - name: GF_AUTH_GENERIC_OAUTH_SIGNOUT_REDIRECT_URL
+              valueFrom:
+                secretKeyRef:
+                  name: oidc-client-laas-memelord-owner-secrets
+                  key: OIDC_IDP_URI
             - name: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -46,7 +50,11 @@ spec:
                   name: "oidc-client-laas-memelord-owner-secrets"
                   key: OIDC_CLIENT_SECRET
             - name: GF_AUTH_GENERIC_OAUTH_SCOPES
-              value: openid,profile,groups
+              #value: openid,profile,groups
+              valueFrom:
+                secretKeyRef:
+                  name: "oidc-client-laas-memelord-owner-secrets"
+                  key: OIDC_AVAILABLE_SCOPES
             - name: GF_AUTH_GENERIC_OAUTH_AUTH_URL
               valueFrom:
                 secretKeyRef:
@@ -71,7 +79,7 @@ spec:
             - name: GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP
               value: "true"
             - name: GF_AUTH_GENERIC_OAUTH_USE_PKCE
-              value: "true"
+              value: "false"
             - name: GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH
               value: "contains(groups[*], 'github.com:codemowers:admins') && 'Admin' || Viewer"
             - name: GF_AUTH_GENERIC_OAUTH_ALLOW_ASSIGN_GRAFANA_ADMIN
@@ -175,3 +183,32 @@ spec:
     - profile
     - groups
   pkce: false
+ ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-config-datasources
+  namespace: tools
+data:
+  prometheus.yaml: |
+    apiVersion: 1
+    prune: true
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        orgId: 1
+        url: http://prometheus-operated.monitoring.svc.cluster.local:9090
+        version: 1
+        editable: false
+      - name: Thanos
+        type: prometheus
+        orgId: 1
+        url: http://thanos-query.monitoring.svc.cluster.local:10902
+        version: 1
+        editable: false
+      - name: Loki
+        type: loki
+        orgId: 1
+        url: http://loki.monitoring.svc.cluster.local:3100
+        version: 1
+        editable: false
