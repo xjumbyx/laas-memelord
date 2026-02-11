@@ -46,7 +46,7 @@ spec:
                   name: "oidc-client-laas-memelord-owner-secrets"
                   key: OIDC_CLIENT_SECRET
             - name: GF_AUTH_GENERIC_OAUTH_SCOPES
-              value: openid,profile
+              value: openid,profile,groups
             - name: GF_AUTH_GENERIC_OAUTH_AUTH_URL
               valueFrom:
                 secretKeyRef:
@@ -163,9 +163,8 @@ spec:
   uri: https://laas-grafana.ee-lte-1.codemowers.io/
   redirectUris:
     - https://laas-grafana.ee-lte-1.codemowers.io/login/generic_oauth
-    - https://laas-grafana.ee-lte-1.codemowers.io/*
-    - https://laas-grafana.ee-lte-1.codemowers.io/
-    - https://laas-grafana.ee-lte-1.codemowers.io/login/generic_oauth/
+  allowedGroups:
+    - github.com:codemowers:admins
   grantTypes:
     - authorization_code
     - refresh_token
@@ -174,4 +173,5 @@ spec:
   availableScopes:
     - openid
     - profile
+    - groups
   pkce: false
