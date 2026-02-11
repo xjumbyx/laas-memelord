@@ -185,7 +185,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: laas-grafana-config-datasources
+  name: laas-grafana
 data:
   prometheus.yaml: |
     apiVersion: 1
