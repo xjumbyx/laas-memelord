@@ -50,7 +50,6 @@ spec:
                   name: "oidc-client-laas-memelord-owner-secrets"
                   key: OIDC_CLIENT_SECRET
             - name: GF_AUTH_GENERIC_OAUTH_SCOPES
-              #value: openid,profile,groups
               valueFrom:
                 secretKeyRef:
                   name: "oidc-client-laas-memelord-owner-secrets"
@@ -70,8 +69,6 @@ spec:
                 secretKeyRef:
                   name: "oidc-client-laas-memelord-owner-secrets"
                   key: OIDC_IDP_USERINFO_URI
-            #- name: GF_SERVER_DOMAIN
-            #  value: laas-grafana.ee-lte-1.codemowers.io
             - name: GF_SERVER_ROOT_URL
               value: "https://laas-grafana.ee-lte-1.codemowers.io"
             - name: GF_AUTH_OAUTH_ALLOW_INSECURE_EMAIL_LOOKUP
@@ -183,7 +180,8 @@ spec:
     - profile
     - groups
   pkce: false
- ---
+  
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
